@@ -1,4 +1,4 @@
-package com.makeagame.first;
+package com.makeagame.prototype.undone;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -109,11 +109,6 @@ public class CatRunning {
                 }
                 list.add(new RenderEvent(text).XY(200, 200));
             return list;
-        }
-
-        @Override
-        public String info() {
-            return "main view";
         }
 
     }
@@ -241,11 +236,6 @@ public class CatRunning {
             hold.reseting = reseting;
             hold.running = running;
             return new Gson().toJson(hold);
-        }
-
-        @Override
-        public String info() {
-            return "main model";
         }
 
         @Override

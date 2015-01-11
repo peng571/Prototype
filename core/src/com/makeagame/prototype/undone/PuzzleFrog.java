@@ -1,4 +1,4 @@
-package com.makeagame.first;
+package com.makeagame.prototype.undone;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -95,8 +95,7 @@ public class PuzzleFrog {
         int upX, upY;
         int move;
 
-        public GameView()
-        {
+        public GameView() {
             String ballInitJson = ResourceManager.get().read("ball");
             for (int i = 0; i < ROW; i++) {
                 for (int j = 0; j < COL; j++) {
@@ -217,11 +216,6 @@ public class PuzzleFrog {
             return list;
         }
 
-        @Override
-        public String info() {
-            return "main view";
-        }
-
     }
 
     class GameModel implements Model {
@@ -335,11 +329,6 @@ public class PuzzleFrog {
                 remove.clear();
             }
             return new Gson().toJson(hold);
-        }
-
-        @Override
-        public String info() {
-            return "main model";
         }
 
         @Override

@@ -1,4 +1,4 @@
-package com.makeagame.first;
+package com.makeagame.prototype.example;
 
 import java.util.ArrayList;
 
@@ -78,11 +78,6 @@ public class Template {
             return list;
         }
 
-        @Override
-        public String info() {
-            return "main view";
-        }
-
     }
 
     class GameModel implements Model {
@@ -94,11 +89,6 @@ public class Template {
         public String hold() {
             Hold hold = new Hold();
             return new Gson().toJson(hold);
-        }
-
-        @Override
-        public String info() {
-            return "main model";
         }
 
         @Override

@@ -1,4 +1,4 @@
-package com.makeagame.first;
+package com.makeagame.prototype.undone;
 
 import java.util.ArrayList;
 import java.util.ListIterator;
@@ -100,11 +100,6 @@ public class FunnyForest {
 //                }
                 list.add(new RenderEvent(String.valueOf(hold.score)).XY(50, 50));
             return list;
-        }
-
-        @Override
-        public String info() {
-            return "main view";
         }
     }
 
@@ -326,11 +321,6 @@ public class FunnyForest {
                 hold.fruits.add(new Fruit(f.type, f.model.x, f.model.y, f.level));
             }
             return new Gson().toJson(hold);
-        }
-
-        @Override
-        public String info() {
-            return "main model";
         }
 
     }

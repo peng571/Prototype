@@ -78,27 +78,20 @@ public class Prototype {
             return list;
         }
 
-        @Override
-        public String info() {
-            return "main view";
-        }
-
     }
 
     class GameModel implements Model {
 
+        BigMap map;
+        
         public GameModel() {
+            map = new BigMap();
         }
 
         @Override
         public String hold() {
             Hold hold = new Hold();
             return new Gson().toJson(hold);
-        }
-
-        @Override
-        public String info() {
-            return "main model";
         }
 
         @Override
@@ -112,9 +105,83 @@ public class Prototype {
     }
 
     class Sign {
+        String action; // build, unit
+        String buildName; // if action is build
+        int r; // 對應大地圖的格子 ROW
+        int c; // 對應大地圖的格子 CAL
     }
 
     class Hold {
+        String[][][] map;
+        String clickObjectInfo;
     }
+    
+    
+    class BigMap {
+        
+        int mapW = 30, mapH = 16;
+        
+        String[][] groundLevel; // no, TODO 地面的擴充
+        
+        String[][] buildLevel; // tree, rock, road, build_xx
+        
+        String[][] animLevel; // job_xx
+        
+        String [][][] tempView;
+        
+        public BigMap(){
+            groundLevel = new String[mapW][mapH];
+            buildLevel = new String[mapW][mapH];
+            animLevel = new String[mapW][mapH];
+            for(int i=0;i<mapW;i++){
+                for(int j=0;j<mapH;j++){
+                    groundLevel[i][j] = "ground";
+                    buildLevel[i][j] = "no";
+                    animLevel[i][j] = "no";
+                }
+            }
+            
+            tempView = new String[3][mapW][mapH];
+        }
+        public String[][][] getView (Camera c){
+            // TODO 套入相機的範圍
+            tempView[0] = groundLevel;
+            tempView[1] = buildLevel;
+            tempView[2] = animLevel;
+            return tempView;
+        }
+    }
+    
+    class Camera{
+        int x, y, w, h;
+        
+        public Camera(){
+            x = 0;
+            y = 0;
+            w = 30;
+            h = 16;
+        }
+        
+        public void move(){
+            // TODO 鏡頭的移動
+        }
+    }
+    
+    interface GameObject{
+        // TODO
+    }
+    
+    class Building implements GameObject{
+        String name;
+        
+        // TODO
+    }
+    
+    class Wolker implements GameObject{
+        String name;
+        
+        // TODO
+    }
+    
 
 }
