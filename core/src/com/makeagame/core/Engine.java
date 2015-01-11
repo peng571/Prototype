@@ -46,8 +46,6 @@ public class Engine extends ApplicationAdapter {
         Controler.get().register( bootstrap.setMainModel(), bootstrap.setMainView());
         gameLable = new BitmapFont();
         gameLable.setColor(new Color(1, 0, 0, 1));
-
-        texture = new Texture("mr3/role.png");
     }
 
     Texture texture;

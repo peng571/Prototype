@@ -45,8 +45,7 @@ public class Prototype {
 
             @Override
             public void resourceFactory(ResourceManager resource) {
-                // TODO:
-                // resource.bind("xx", new Resource().image("image/xx.png"));
+                resource.bindImage("ground", "ground.png").src(0,0,32,32);
             }
         });
     }
@@ -54,7 +53,12 @@ public class Prototype {
     class GameView implements View {
 
         int touchStartX, touchStartY;
+        Camera camera;
 
+        public GameView(){
+            camera = new Camera();
+        }
+        
         @Override
         public void signal(ArrayList<SignalEvent> signalList) {
             for (SignalEvent s : signalList) {
@@ -64,7 +68,7 @@ public class Prototype {
                         touchStartY = s.signal.y;
                     }
                     if (s.action == SignalEvent.ACTION_UP) {
-
+                        // TODO 擴充引擎的觸控 支援高階方法
                     }
                 }
             }
@@ -72,9 +76,18 @@ public class Prototype {
 
         @Override
         public ArrayList<RenderEvent> render(String build) {
-
-            ArrayList<RenderEvent> list = new ArrayList<RenderEvent>();
+            ArrayList<RenderEvent> list = new ArrayList<RenderEvent>(); // TODO 循環利用
             Hold hold = new Gson().fromJson(build, Hold.class);
+            
+            String[][][] map = hold.map;
+            int i = 0; // TODO for i in 0..3
+            for(int j=0;j<map[i].length; j++){
+                for(int k=0;k<map[i][j].length;k++){
+                    list.add( new RenderEvent(ResourceManager.get().fetch(map[i][j][k]))
+                    .XY(32 * j,  32* k)
+                    );
+                }
+            }
             return list;
         }
 
@@ -91,11 +104,13 @@ public class Prototype {
         @Override
         public String hold() {
             Hold hold = new Hold();
+            hold.map = map.getView(null); // TODO add Camera
             return new Gson().toJson(hold);
         }
 
         @Override
         public void process(int command, JSONObject json) throws JSONException {
+           // Sign signs = new Gson().fromJson(gsonString, Sign.class);
             switch (command) {
             // TODO
             }
@@ -104,12 +119,13 @@ public class Prototype {
 
     }
 
-    class Sign {
-        String action; // build, unit
-        String buildName; // if action is build
-        int r; // 對應大地圖的格子 ROW
-        int c; // 對應大地圖的格子 CAL
-    }
+//    class Sign {
+//        String action; // build, unit
+//        String buildName; // if action is build
+//        int r; // 對應大地圖的格子 ROW
+//        int c; // 對應大地圖的格子 CAL
+//        Camera camera;
+//    }
 
     class Hold {
         String[][][] map;
