@@ -7,10 +7,10 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.makeagame.prototype.Prototype;
 
 public class AndroidLauncher extends AndroidApplication {
-	@Override
-	protected void onCreate (Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		initialize(new Prototype(), config);
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
+        initialize(new Prototype().getEngine(), config);
+    }
 }
