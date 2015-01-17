@@ -78,8 +78,7 @@ public class Engine extends ApplicationAdapter {
             }
 
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-                logI("touch " + screenX + " " + screenY);
-
+                logD("touch " + screenX + " " + screenY);
                 signalList.add(new SignalEvent(SignalEvent.MOUSE_EVENT, SignalEvent.ACTION_DOWN, new int[] { button, screenX, screenY }));
                 return super.touchDown(screenX, screenY, pointer, button);
             }
@@ -104,20 +103,10 @@ public class Engine extends ApplicationAdapter {
         }
         signalList.clear();
 
-        // time = System.currentTimeMillis();
-        // count = 0;
-        // batch.begin();
-        // while (System.currentTimeMillis() - time <= 1000) {
-        // batch.draw(texture, 0, 0, 0, 0, 128, 128);
-        // count++;
-        // }
-        // batch.end();
-        // System.out.println("draws " + count + " times");
-
         logD("batch begine time " + System.currentTimeMillis());
         batch.begin();
         // batch.enableBlending();
-        renderList =     Controler.get().mainView.render(Controler.get().build());
+        renderList =  Controler.get().mainView.render(Controler.get().build());
         // Engine.logI("srcH: " + new Integer(renderList.size()).toString());
 
         for (RenderEvent e : renderList) {

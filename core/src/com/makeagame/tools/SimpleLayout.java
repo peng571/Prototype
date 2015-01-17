@@ -137,15 +137,15 @@ public class SimpleLayout {
         
     }
     
-    public RenderEvent[] renderSelf(int x, int y) {
-        beforeRender();
-        return sprite.render(x, y);
-    }
-    
-//    public ArrayList<RenderEvent> renderSelf2(int x, int y) {
+//    public RenderEvent[] renderSelf(int x, int y) {
 //        beforeRender();
 //        return sprite.render(x, y);
 //    }
+    
+    public ArrayList<RenderEvent> renderSelf(int x, int y) {
+        beforeRender();
+        return sprite.render(x, y);
+    }
     
     public void reslove(int offx, int offy) {
         beforeReslove();
@@ -197,25 +197,32 @@ public class SimpleLayout {
      }
     
     
-    //public ArrayList<RenderEvent> render() {
-    public RenderEvent[] render() {
+    public ArrayList<RenderEvent> render() {
+    //public RenderEvent[] render() {
         // 先算出真正的位置
         //int x = fixedX + this.x + offx;
         //int y = fixedY + this.y + offy;
         
-        RenderEvent[] list = renderSelf(realX, realY);
-                
+//        RenderEvent[] list = renderSelf(realX, realY);
+        ArrayList<RenderEvent>  list = renderSelf(realX, realY);
+        
         if (children != null) {
-            RenderEvent[][] lists = new RenderEvent[children.size()+1][];
-            lists[0] = list;
-            for (int i=0; i<children.size(); i++) {
-                if (children.get(i).visible) {
-                    lists[i+1] = children.get(i).render();
-                } else {
-                    lists[i+1] = new RenderEvent[0];
-                }
-            }
-            list = join(lists);
+//            RenderEvent[][] lists = new RenderEvent[children.size()+1][];
+//            lists[0] = list;
+//            for (int i=0; i<children.size(); i++) {
+//                if (children.get(i).visible) {
+//                    lists[i+1] = children.get(i).render();
+//                } else {
+//                    lists[i+1] = new RenderEvent[0];
+//                }
+//            }
+//            list = join(lists);
+            
+          for (int i=0; i<children.size(); i++) {
+              if (children.get(i).visible) {
+                  list.addAll(children.get(i).render());
+              } 
+          }
             
 //            for (SimpleLayout c : children) {
 //                if (c.visible) {
@@ -227,5 +234,8 @@ public class SimpleLayout {
         
         return list;
     }
+    
+    
+    
     
 }

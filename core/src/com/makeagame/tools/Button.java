@@ -3,8 +3,11 @@ package com.makeagame.tools;
 import java.util.ArrayList;
 
 import com.makeagame.core.view.SignalEvent;
+import com.makeagame.core.view.SignalEvent.Signal;
+import com.sun.org.glassfish.gmbal.Description;
 
-public class Button {// implements View {
+@Deprecated 
+public class Button {// 用 View/ClickListener 取代
     /**
      * 可能的狀態:
      * 定性狀態:
@@ -17,13 +20,16 @@ public class Button {// implements View {
      */
     public static final int Invisible = 0;
     public static final int Visible = 1;
+    
     public static final int Disable = 0;
     public static final int Enable = 1;
     public static final int Active = 2;
     public static final int Inactive = 3;
+    
     public static final int Static = 0;
-//    public static final int Hovered = 1;
-    public static final int Pushed = 1;
+    public static final int Hovered = 1;
+    public static final int Pushed = 2;
+    
     
     // 進度條, 當達到 1.0 時進入Active, 不到時退回Inactive
     static double progress = 1.0;
@@ -34,17 +40,17 @@ public class Button {// implements View {
     public Button()
     {
         // mobile do not have Hovered
-        action_state = new State(new long[][] {
-                // Static Pushed
-                { State.BLOCK, State.ALLOW },
-                { State.ALLOW, State.BLOCK }
-        });
 //        action_state = new State(new long[][] {
-//                // Static Hovered Pushed
-//                { State.BLOCK, State.ALLOW, State.BLOCK },
-//                { State.ALLOW, State.BLOCK, State.ALLOW },
-//                { State.BLOCK, State.ALLOW, State.BLOCK }
+//                // Static Pushed
+//                { State.BLOCK, State.ALLOW },
+//                { State.ALLOW, State.BLOCK }
 //        });
+        action_state = new State(new long[][] {
+                // Static Hovered Pushed
+                { State.BLOCK, State.ALLOW, State.ALLOW },
+                { State.ALLOW, State.BLOCK, State.ALLOW },
+                { State.BLOCK, State.ALLOW, State.BLOCK }
+        });
         action_state.reset(Static);
         visible_state = new State(new long[][] {
                 // Invisible Visible
@@ -96,45 +102,55 @@ public class Button {// implements View {
         return false;
     }
 
-    public void OnMouseIn() {
+    public void OnMouseIn(Signal s) {
+        System.out.println("OnMouseIn");
+     // Override to add method
     }
 
-    public void OnMouseOut() {
+    public void OnMouseOut(Signal s) {
+     // Override to add method
+        System.out.println("OnMouseOut");
     }
 
-    public void OnMouseDown() {
+    public void OnMouseDown(Signal s) {
+     // Override to add method
+        System.out.println("OnMouseDown");
     }
 
-    public void OnMouseUp() {
+    public void OnMouseUp(Signal s) {
+     // Override to add method
+        System.out.println("OnMouseUp");
     }
 
     // @Override
     public void signal(ArrayList<SignalEvent> signalList) {
         if (enable_state.currentStat() != Active) {
-            // Engine.logI("es: " + Integer.toString(enable_state.currentStat()));
+            //Engine.logI("es: " + Integer.toString(enable_state.currentStat()));
             action_state.reset(Static);
             return;
         }
         for (SignalEvent s : signalList) {
             if (s.type == SignalEvent.MOUSE_EVENT || s.type == SignalEvent.TOUCH_EVENT) {
-                // Engine.logI(Integer.toString(s.signal.x));
+                //Engine.logI(Integer.toString(s.signal.x));
                 if (isInArea(s.signal.x, s.signal.y)) {
+                    System.out.println("in");
                     if (s.action == SignalEvent.ACTION_MOVE) {
-//                        if (action_state.enter(Hovered)) {
-//                            OnMouseIn();
-//                        }
+                        if (action_state.enter(Hovered)) {
+                            OnMouseIn(s.signal);
+                        }
                     } else if (s.action == SignalEvent.ACTION_DOWN) {
                         if (action_state.enter(Pushed)) {
-                            OnMouseDown();
+                            OnMouseDown(s.signal);
                         }
                     } else if (s.action == SignalEvent.ACTION_UP) {
-//                        if (action_state.enter(Hovered)) {
-//                            OnMouseUp();
-//                        }
+                        if (action_state.enter(Hovered)) {
+                            OnMouseUp(s.signal);
+                        }
                     }
                 } else {
+                    System.out.println("out");
                     if (action_state.enter(Static)) {
-                        OnMouseOut();
+                        OnMouseOut(s.signal);
                     }
                 }
             }
@@ -219,8 +235,8 @@ public class Button {// implements View {
          * enable_state.enter(Inactive);
          * }
          */
-        // �p�G invisible�h�����
-        // TODO: ����b��
+        // 如果 invisible則不顯示
+        // TODO: 之後在做
         // ArrayList<RenderEvent> renderlist = new ArrayList<RenderEvent>();
         if (visible_state.currentStat() == Invisible) {
             return;
@@ -247,9 +263,9 @@ public class Button {// implements View {
                 //Engine.logI("stat: " + Long.toString(action_state.elapsed()));
                 break;
                 // mobile do not have Hovered
-//            case Hovered:
-//                if (spHovered != null) { sprite.copyFrom(spHovered); }
-//                break;
+            case Hovered:
+                if (spHovered != null) { sprite.copyFrom(spHovered); }
+                break;
             case Pushed:
                 if (spPushed != null) { sprite.copyFrom(spPushed); }
                 break;
@@ -258,9 +274,9 @@ public class Button {// implements View {
                 sprite.apply(ktStatic.get(action_state.elapsed(Static)));
             }
             // mobile do not have Hovered
-//            if (ktHovered != null) {
-//                sprite.apply(ktHovered.get(action_state.elapsed(Hovered)));
-//            }
+            if (ktHovered != null) {
+                sprite.apply(ktHovered.get(action_state.elapsed(Hovered)));
+            }
             if (ktPushed != null) {
                 sprite.apply(ktPushed.get(action_state.elapsed(Pushed)));
             }
