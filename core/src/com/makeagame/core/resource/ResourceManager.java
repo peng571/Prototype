@@ -89,7 +89,6 @@ public class ResourceManager {
         return t;
     }
     
-    
     public void bind(String id, Resource resource) {
         resourceMap.put(id, resource);
     }

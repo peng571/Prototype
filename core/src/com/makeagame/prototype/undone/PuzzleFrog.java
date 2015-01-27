@@ -9,7 +9,7 @@ import org.json.JSONObject;
 import com.google.gson.Gson;
 import com.makeagame.core.Bootstrap;
 import com.makeagame.core.Engine;
-import com.makeagame.core.model.Action;
+import com.makeagame.core.action.Action;
 import com.makeagame.core.model.AnimationObject;
 import com.makeagame.core.model.Model;
 import com.makeagame.core.resource.ResourceManager;
@@ -161,23 +161,22 @@ public class PuzzleFrog {
         ArrayList<GameModel.Ball> tempRemove;
 
         @Override
-        public ArrayList<RenderEvent> render(String build) {
+        public ArrayList<RenderEvent> render(ArrayList<RenderEvent> list, String build) {
 
-            ArrayList<RenderEvent> list = new ArrayList<RenderEvent>();
-                final Hold hold = new Gson().fromJson(build, Hold.class);
+            final Hold hold = new Gson().fromJson(build, Hold.class);
 
-                if (temp == null) {
-                    temp = hold.ballMap;
-                }
-                for (int i = 0; i < ROW; i++) {
-                    for (int j = 0; j < COL; j++) {
-                        balls[i][j].run();
-                        if (hold.ballMap[i][j] > 0) {
-                            // TODO:
+            if (temp == null) {
+                temp = hold.ballMap;
+            }
+            for (int i = 0; i < ROW; i++) {
+                for (int j = 0; j < COL; j++) {
+                    balls[i][j].run();
+                    if (hold.ballMap[i][j] > 0) {
+                        // TODO:
 //                            list.add(new RenderEvent(ResourceManager.get().fetch("ball" + String.valueOf(temp[i][j])))
 //                                    .XY(startX + balls[i][j].model.x, startY + balls[i][j].model.y).srcWH(ballW, ballH).dstWH(balls[i][j].model.w, balls[i][j].model.h));
-                        }
                     }
+                }
 
                 if (hold.moved) {
                     gameState = 1;
@@ -205,7 +204,7 @@ public class PuzzleFrog {
                     // gameState = 3;
                     // }
                 }
-
+    
                 // if (!hold.remove.isEmpty()) {
                 // for (Position p : hold.remove) {
                 // list.add(new RenderEvent(ResourceManager.get().fetch("boom")).XY(startX + p.r, startY + p.c).srcWH(ballW, ballH));

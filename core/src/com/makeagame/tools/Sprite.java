@@ -7,6 +7,9 @@ import com.makeagame.core.resource.ResourceManager;
 import com.makeagame.core.view.RenderEvent;
 import com.makeagame.tools.KeyTable.ApplyList;
 
+/**
+ * 負責圖片 (和音效?) 的特效處理
+ */
 public class Sprite {
     // 位移
     public int x = 0;
@@ -92,8 +95,6 @@ public class Sprite {
         this.sound = "";
         this.palyedSound = "";
     }
-    
-    
     
     public Sprite xy(int x, int y) {
         this.x = x;
@@ -211,86 +212,44 @@ public class Sprite {
     private RenderEvent render_event_snd = null;
     
     
-//    public RenderEvent[] render(int offx, int offy) {
-//        //ArrayList<RenderEvent> list = new ArrayList<RenderEvent>();
-//        RenderEvent img=null, snd=null;
-//        
-//        if (image != "") {
-//            if (this.render_event_img == null) {
-//                this.render_event_img = new RenderEvent(ResourceManager.get().fetch(image));
-//            } else {
-//                this.render_event_img.Res(ResourceManager.get().fetch(image));
-//            }
-//            this.render_event_img
-//                .XY(offx + x - centerX, offy + y - centerY)
-//                .color(red, green, blue, alpha)
-//                .src(srcX, srcY, srcW, srcH)
-//                .filp(flipx, flipy)
-//                .blend(srcFunc, dstFunc);
-//            img = this.render_event_img;
-//        }
-//        if (sound != "" && sound != palyedSound) {
-//            //list.add(new RenderEvent("").sound(sound, soundVol));
-//            if (this.render_event_snd == null) {
-//                this.render_event_snd = new RenderEvent(ResourceManager.get().fetch(sound));
-//            } else {
-//                this.render_event_snd.Res(ResourceManager.get().fetch(sound));
-//            }
-//            this.render_event_snd.vol = soundVol;
-//            snd = this.render_event_snd;
-//            //list.add(re);
-//        }
-//        palyedSound = sound;
-//        
-//        if (img != null && snd != null) {
-//            return new RenderEvent[]{img, snd};
-//        } else if (img != null) {
-//            return new RenderEvent[]{img};
-//        } else if (snd != null) {
-//            return new RenderEvent[]{snd};
-//        } else {
-//            return new RenderEvent[]{};
-//        }
-//        //return list;
-//    }
-    
-    public ArrayList<RenderEvent> render(int offx, int offy) {
-            ArrayList<RenderEvent> list = new ArrayList<RenderEvent>();
-            RenderEvent img=null, snd=null;
-            
-            if (image != "") {
-                if (this.render_event_img == null) {
-                    this.render_event_img = new RenderEvent(ResourceManager.get().fetch(image));
-                } else {
-                    this.render_event_img.Res(ResourceManager.get().fetch(image));
-                }
-                this.render_event_img
-                    .XY(offx + x - centerX, offy + y - centerY)
-                    .color(red, green, blue, alpha)
-                    .src(srcX, srcY, srcW, srcH)
-                    .filp(flipx, flipy)
-                    .blend(srcFunc, dstFunc);
-                img = this.render_event_img;
+    public ArrayList<RenderEvent> render(ArrayList<RenderEvent> list, int offx, int offy) {
+        RenderEvent img = null, snd =  null;
+        
+        if (image != "") {
+            if (this.render_event_img == null) {
+                this.render_event_img = new RenderEvent(ResourceManager.get().fetch(image));
+            } else {
+                this.render_event_img.Res(ResourceManager.get().fetch(image));
             }
-            if (sound != "" && sound != palyedSound) {
-                //list.add(new RenderEvent("").sound(sound, soundVol));
-                if (this.render_event_snd == null) {
-                    this.render_event_snd = new RenderEvent(ResourceManager.get().fetch(sound));
-                } else {
-                    this.render_event_snd.Res(ResourceManager.get().fetch(sound));
-                }
-                this.render_event_snd.vol = soundVol;
-                snd = this.render_event_snd;
-                //list.add(re);
-            }
-            palyedSound = sound;
-            
-           if (img != null) {
-                 list.add(img);
-            } if (snd != null) {
-                 list.add(snd);
-            }
-            return list;
+            this.render_event_img
+                .XY(offx + x - centerX, offy + y - centerY)
+                .color(red, green, blue, alpha)
+                .src(srcX, srcY, srcW, srcH)
+                .filp(flipx, flipy)
+                .blend(srcFunc, dstFunc);
+            img = this.render_event_img;
         }
+        if (sound != "" && sound != palyedSound) {
+            if (this.render_event_snd == null) {
+                this.render_event_snd = new RenderEvent(ResourceManager.get().fetch(sound));
+            } else {
+                this.render_event_snd.Res(ResourceManager.get().fetch(sound));
+            }
+            this.render_event_snd.vol = soundVol;
+            snd = this.render_event_snd;
+        }
+        palyedSound = sound;
+        
+        
+        if (img != null) {
+             list.add(img);
+        } 
+        
+        if (snd != null) {
+             list.add(snd);
+        }
+        
+        return list;
+    }
 
 }

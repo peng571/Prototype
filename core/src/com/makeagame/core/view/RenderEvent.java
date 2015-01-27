@@ -46,7 +46,7 @@ public class RenderEvent {
     private RenderEvent() {
         angle = 0;
         XY(0, 0);
-        srcWH(36, 36);
+        srcWH(-1, -1);
         gravity = 0;
         this.color = new Color(Color.WHITE);
     }

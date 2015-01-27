@@ -10,5 +10,5 @@ public interface View {
     public abstract void signal(ArrayList<SignalEvent> s) throws JSONException;
 
     // 送出繪圖指令
-    public abstract ArrayList<RenderEvent> render(String list);
+    public abstract ArrayList<RenderEvent> render(ArrayList<RenderEvent> list, String s);
 }

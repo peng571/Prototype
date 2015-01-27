@@ -89,16 +89,15 @@ public class FunnyForest {
         }
 
         @Override
-        public ArrayList<RenderEvent> render(String build) {
-            ArrayList<RenderEvent> list = new ArrayList<RenderEvent>();
-                Hold hold = new Gson().fromJson(build, Hold.class);
-                // TODO:
+        public ArrayList<RenderEvent> render(ArrayList<RenderEvent> list, String build) {
+            Hold hold = new Gson().fromJson(build, Hold.class);
+            // TODO:
 //                list.add(new RenderEvent(ResourceManager.get().fetch("bird")).XY(hold.x, hold.y).srcWH(128, 128).Ratio(0.6f).Rotation(hold.angle));
 //                for (Fruit f : hold.fruits) {
 //                    list.add(new RenderEvent(ResourceManager.get().fetch(f.type + f.level)).XY(f.x, f.y).srcWH(128, 128));
 //                    // list.add(new RenderEvent(ResourceManager.get().fetch(f.type)).XY(f.x, f.y).srcWH(128, 128));
 //                }
-                list.add(new RenderEvent(String.valueOf(hold.score)).XY(50, 50));
+            list.add(new RenderEvent(String.valueOf(hold.score)).XY(50, 50));
             return list;
         }
     }

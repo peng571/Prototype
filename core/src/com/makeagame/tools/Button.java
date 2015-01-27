@@ -1,166 +1,158 @@
 package com.makeagame.tools;
 
-import java.util.ArrayList;
-
-import com.makeagame.core.view.SignalEvent;
+import com.makeagame.core.action.EventListener;
+import com.makeagame.core.action.Action;
 import com.makeagame.core.view.SignalEvent.Signal;
-import com.sun.org.glassfish.gmbal.Description;
 
-@Deprecated 
-public class Button {// 用 View/ClickListener 取代
+
+/**
+ * 包含 EventListener 的按鈕型 SimpleLayout
+ */
+public class Button extends SimpleLayout{
     /**
      * 可能的狀態:
      * 定性狀態:
-     * Disable disable 時按鈕不能觸發, 且按鈕顯示灰色
-     * Activate
-     * Inactivate InActivate 時按鈕不能觸發, 而且顯示為準備中
-     * Invisible InVisible 時按鈕能觸發, 且不顯示
-     * Hovered 代表滑鼠(指標)在感應區內時(行動平台上無效)
-     * Pushed 代表被按著時
+     * InVisible 時按鈕能觸發， 但不顯示
+     * Visable 時按鈕能正常觸發
+     * Gone 時按鈕無法觸發，且不顯示
      */
     public static final int Invisible = 0;
     public static final int Visible = 1;
+    public static final int Gone = 2;
     
-    public static final int Disable = 0;
-    public static final int Enable = 1;
-    public static final int Active = 2;
-    public static final int Inactive = 3;
-    
-    public static final int Static = 0;
-    public static final int Hovered = 1;
-    public static final int Pushed = 2;
-    
+    public static final long clickTime = 300;
     
     // 進度條, 當達到 1.0 時進入Active, 不到時退回Inactive
     static double progress = 1.0;
     public State visible_state;
-    public State enable_state;
-    public State action_state;
 
-    public Button()
-    {
-        // mobile do not have Hovered
-//        action_state = new State(new long[][] {
-//                // Static Pushed
-//                { State.BLOCK, State.ALLOW },
-//                { State.ALLOW, State.BLOCK }
-//        });
-        action_state = new State(new long[][] {
-                // Static Hovered Pushed
-                { State.BLOCK, State.ALLOW, State.ALLOW },
-                { State.ALLOW, State.BLOCK, State.ALLOW },
-                { State.BLOCK, State.ALLOW, State.BLOCK }
-        });
-        action_state.reset(Static);
+    // 
+    int x, y, w, h;
+    
+    public Action onClickAction;
+    public Action onLongClickAction;
+   
+    // TODO 按鈕的前景背景可分離
+    SimpleLayout backgrountLayout;
+    
+    // 暫時不支援空的建構子
+//    public Button() {
+//        super();
+//    }
+
+    public Button(Sprite s){
+        super(s);
+        
+        listener = new EventListener(){
+
+            Long clickTime = -1l;
+            
+            @Override
+            public void OnMouseDown(Signal s) {
+                clickTime = System.currentTimeMillis();
+            }
+            
+            @Override
+            public void OnMouseOut(Signal s) {
+                clickTime = -1l;
+            }
+            
+            @Override
+            public void OnMouseUp(Signal s) {
+                if(clickTime > 0 && System.currentTimeMillis() - clickTime < Button.clickTime){
+                    onClick();
+                } else {
+                    onLongClick();
+                }
+            }
+        };
+        
         visible_state = new State(new long[][] {
-                // Invisible Visible
-                { State.BLOCK, State.ALLOW },
-                { State.ALLOW, State.BLOCK }
+                // Visible Invisible Gone
+                { State.BLOCK, State.ALLOW, State.ALLOW},
+                { State.ALLOW, State.BLOCK, State.ALLOW},
+                { State.ALLOW, State.ALLOW, State.BLOCK}
         });
-        visible_state.reset(Visible);
-        // 只能由Inactive->Active
-        // Enable 是過渡狀態
-        enable_state = new State(new long[][] {
-                // Disable Enable Active Inactive
-                { State.BLOCK, State.ALLOW, State.BLOCK, State.BLOCK },
-                { State.ALLOW, State.BLOCK, State.ALLOW, State.ALLOW },
-                { State.ALLOW, State.BLOCK, State.BLOCK, State.ALLOW },
-                { State.ALLOW, State.BLOCK, State.ALLOW, State.BLOCK }
-        });
-        enable_state.reset(Active);
+        visible_state.enter(Visible);
+        
+        // TODO 最好能有通用的預設按鈕背景
+        backgrountLayout = new SimpleLayout();
+        
+    }
+    
+    @Override
+    @Deprecated
+    // 改用 setRectArea 來設置按鈕的位置
+    public SimpleLayout XY(int x, int y){
+        return this;
     }
 
-    int x, y, w, h;
 
-    public void setRectArea(int x, int y, int w, int h) {
+    // 按鈕監聽的範圍，這個一定要設
+    public Button RectArea(int x, int y, int w, int h) {
+        super.XY(x, y);
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
+        
+        // TODO 有沒有辦法再自動取得圖片的大小來設置按鈕位置的預設值?
+        
+        listener.setRectArea(x, y, w, h);
+        return this;
     }
-
+    
+    public void onClick(){
+        if(onClickAction != null){
+            onClickAction.execute();
+        }
+    }
+    
+    public void onLongClick(){
+        if(onLongClickAction != null){
+            onLongClickAction.execute();
+        }else{
+            // 預設是和 onClick 執行同樣動作
+            onClick();
+        }
+    }
+    
+    
+    // 
+//    public void setOnClickAction(Action action){
+//        
+//    }
+//    
+//    public void setOnLongClickAction(Action action){
+//        
+//    }
+    
     public void setEnable(boolean bool) {
-        if (bool) {
-            enable_state.enter(Enable);
-        } else {
-            enable_state.enter(Disable);
-        }
+        listener.setEnable(bool);
     }
 
-    public void setVisible(boolean bool) {
-        if (bool) {
-            visible_state.enter(Visible);
-        } else {
-            visible_state.enter(Invisible);
-        }
-    }
-
-    public boolean isInArea(int _x, int _y) {
-        if (_x > x && _x < x + w && _y > y && _y < y + h) {
-            return true;
-        }
-        return false;
-    }
-
-    public void OnMouseIn(Signal s) {
-        System.out.println("OnMouseIn");
-     // Override to add method
-    }
-
-    public void OnMouseOut(Signal s) {
-     // Override to add method
-        System.out.println("OnMouseOut");
-    }
-
-    public void OnMouseDown(Signal s) {
-     // Override to add method
-        System.out.println("OnMouseDown");
-    }
-
-    public void OnMouseUp(Signal s) {
-     // Override to add method
-        System.out.println("OnMouseUp");
-    }
-
-    // @Override
-    public void signal(ArrayList<SignalEvent> signalList) {
-        if (enable_state.currentStat() != Active) {
-            //Engine.logI("es: " + Integer.toString(enable_state.currentStat()));
-            action_state.reset(Static);
-            return;
-        }
-        for (SignalEvent s : signalList) {
-            if (s.type == SignalEvent.MOUSE_EVENT || s.type == SignalEvent.TOUCH_EVENT) {
-                //Engine.logI(Integer.toString(s.signal.x));
-                if (isInArea(s.signal.x, s.signal.y)) {
-                    System.out.println("in");
-                    if (s.action == SignalEvent.ACTION_MOVE) {
-                        if (action_state.enter(Hovered)) {
-                            OnMouseIn(s.signal);
-                        }
-                    } else if (s.action == SignalEvent.ACTION_DOWN) {
-                        if (action_state.enter(Pushed)) {
-                            OnMouseDown(s.signal);
-                        }
-                    } else if (s.action == SignalEvent.ACTION_UP) {
-                        if (action_state.enter(Hovered)) {
-                            OnMouseUp(s.signal);
-                        }
-                    }
-                } else {
-                    System.out.println("out");
-                    if (action_state.enter(Static)) {
-                        OnMouseOut(s.signal);
-                    }
-                }
+    public void setVisible(int visibleState) {
+        switch(visibleState){
+        case Visible:
+            if(visible_state.enter(Visible)) {
+                visible = true;
+                setEnable(true);
             }
-        }
-    }
-
-    // @Override
-    public String info() {
-        return "button view";
-    }
+            break;
+        case Invisible:
+             if(visible_state.enter(Invisible)) {
+                 visible = false;
+                 setEnable(true);
+             }
+             break;
+        case Gone:
+            if(visible_state.enter(Gone)) { 
+                visible = false;
+                setEnable(false);
+            }
+            break;
+         }
+     }
 
     SimpleLayout spDisable;
     SimpleLayout spInactive;
@@ -225,9 +217,11 @@ public class Button {// 用 View/ClickListener 取代
         ktPushed = keytable;
     }
 
-    // @Override
-    // public ArrayList<RenderEvent> render(ArrayList<String> build) {
     public void apply(SimpleLayout sprite) {
+        
+        State enable_state = listener.enable_state;
+        State action_state = listener.action_state;
+        
         /*
          * if (progress >= 1.0) {
          * enable_state.enter(Active);
@@ -238,47 +232,48 @@ public class Button {// 用 View/ClickListener 取代
         // 如果 invisible則不顯示
         // TODO: 之後在做
         // ArrayList<RenderEvent> renderlist = new ArrayList<RenderEvent>();
+        
         if (visible_state.currentStat() == Invisible) {
             return;
         }
         switch (enable_state.currentStat())
         {
-        case Disable:
+        case EventListener.Disable:
             if (spDisable != null) { sprite.copyFrom(spDisable); }
             if (ktDisable != null) {
                 sprite.apply(ktDisable.get(enable_state.elapsed()));
             }
             break;
-        case Inactive:
+        case EventListener.Inactive:
             if (spInactive != null) { sprite.copyFrom(spInactive); }
             if (ktInactive != null) {
                 sprite.apply(ktInactive.get(enable_state.elapsed()));
             }
             break;
-        case Active:
+        case EventListener.Active:
             switch (action_state.currentStat())
             {
-            case Static:
+            case EventListener.Static:
                 if (spStatic != null) { sprite.copyFrom(spStatic); }
                 //Engine.logI("stat: " + Long.toString(action_state.elapsed()));
                 break;
                 // mobile do not have Hovered
-            case Hovered:
+            case EventListener.Hovered:
                 if (spHovered != null) { sprite.copyFrom(spHovered); }
                 break;
-            case Pushed:
+            case EventListener.Pushed:
                 if (spPushed != null) { sprite.copyFrom(spPushed); }
                 break;
             }
             if (ktStatic != null) {
-                sprite.apply(ktStatic.get(action_state.elapsed(Static)));
+                sprite.apply(ktStatic.get(action_state.elapsed(EventListener.Static)));
             }
             // mobile do not have Hovered
             if (ktHovered != null) {
-                sprite.apply(ktHovered.get(action_state.elapsed(Hovered)));
+                sprite.apply(ktHovered.get(action_state.elapsed(EventListener.Hovered)));
             }
             if (ktPushed != null) {
-                sprite.apply(ktPushed.get(action_state.elapsed(Pushed)));
+                sprite.apply(ktPushed.get(action_state.elapsed(EventListener.Pushed)));
             }
             break;
         }

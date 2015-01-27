@@ -71,9 +71,7 @@ public class Template {
         }
 
         @Override
-        public ArrayList<RenderEvent> render(String build) {
-
-            ArrayList<RenderEvent> list = new ArrayList<RenderEvent>();
+        public ArrayList<RenderEvent> render(ArrayList<RenderEvent> list, String build) {
             Hold hold = new Gson().fromJson(build, Hold.class);
             return list;
         }

@@ -30,23 +30,26 @@ public class Prototype {
 
             @Override
             public void resourceFactory(ResourceManager resource) {
-                resource.bindImage("ground", "ground.png").src(0, 0, 32, 32);
+                resource.bindImage("ground", "ground.png").src(32, 32);
                 
                 // RES
-                resource.bindImage("rock", "rock.png").src(0, 0, 32, 32);
-                resource.bindImage("tree", "tree.png").src(0, 0, 32, 32);
-                resource.bindImage("road", "road.png").src(0, 0, 32, 32);
+                resource.bindImage("rock", "rock.png").src(32, 32);
+                resource.bindImage("tree", "tree.png").src(32, 32);
+                resource.bindImage("road", "road.png").src(32, 32);
                 
                 // BUILDING
-                resource.bindImage("rockf", "rockfectory.png").src(0, 0, 64, 64);
-                resource.bindImage("woodf", "woodfectory.png").src(0, 0, 64, 64);
+                resource.bindImage("rockfectory", "rockfectory.png").src(64, 64);
+                resource.bindImage("woodfectory", "woodfectory.png").src(64, 64);
                 
                 // UI
-                resource.bindImage("tab", "tab.png").src(0, 0, 128, 540);
+                resource.bindImage("tab", "tab.png").src(240, 720);
+                resource.bindImage("build_error", "build_error.png").src(32, 32);
+                resource.bindImage("build_ok", "build_ok.png").src(32, 32);
+                resource.bindImage("btn_build", "btn_build.png").src(64,64);
+                resource.bindImage("btn_res", "btn_res.png").src(64,64);
+                resource.bindImage("button", "btn.png").src(64, 64);
+                resource.bindImage("btn1", "btn_build.png").src(64, 64);
                 
-                // BTN
-                resource.bindImage("button", "btn.png").src(0, 0, 64, 64);
-                resource.bindImage("btn1", "btn_build.png").src(0, 0, 64, 64);
             }
         });
     }
@@ -55,11 +58,6 @@ public class Prototype {
         // TODO
     }
 
-    // class Building implements GameObject{
-    // String name;
-    //
-    // // TODO
-    // }
     class Wolker implements GameObject {
         String name;
         // TODO
@@ -76,6 +74,7 @@ class Sign {
     
     public static final int Ask_Build = 2;
     public static final int Build = 1;
+    public static final int Cancel = 0;
 }
 
 class Hold {
@@ -91,10 +90,16 @@ class Hold {
     // if click unit
     String clickObjectInfo;  
     
-    public void clean(){
-        map = null;
-//        r = 0;
-//        c = 0;
+//    public void clean(){
+//        map = null;
+////        r = 0;
+////        c = 0;
+//        action = "";
+//        buildResultMap = null;
+//        clickObjectInfo  = "";
+//    }
+    
+    public void cleanAction(){
         action = "";
         buildResultMap = null;
         clickObjectInfo  = "";
@@ -102,18 +107,20 @@ class Hold {
 }
 
 class Camera {
-    int x, y, w, h;
+    int x, y, row, col;
     float ratio;
 
     public Camera() {
         x = 0;
         y = 0;
-        w = 30;
-        h = 16;
         ratio = 1.0f;
+        row = (int)((Bootstrap.screamWidth() - 240f) / (32f/ratio)) +1;
+        col = (int)(Bootstrap.screamHeight() / (32f/ratio)) +1;
+        
+        System.out.println("reset camera row="+row + "col=" + col );
     }
 
-    public void move() {
+    public void move() { 
         // TODO 鏡頭的移動
     }
 }

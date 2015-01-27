@@ -29,7 +29,7 @@ public class Engine extends ApplicationAdapter {
     Bootstrap bootstrap;
 
     ArrayList<SignalEvent> signalList = new ArrayList<SignalEvent>();
-    ArrayList<RenderEvent> renderList;
+    ArrayList<RenderEvent> renderList = new ArrayList<RenderEvent>();
 
     public Engine(Bootstrap bootstrap) {
         this.bootstrap = bootstrap;
@@ -106,7 +106,7 @@ public class Engine extends ApplicationAdapter {
         logD("batch begine time " + System.currentTimeMillis());
         batch.begin();
         // batch.enableBlending();
-        renderList =  Controler.get().mainView.render(Controler.get().build());
+        renderList =  Controler.get().mainView.render(renderList, Controler.get().build());
         // Engine.logI("srcH: " + new Integer(renderList.size()).toString());
 
         for (RenderEvent e : renderList) {
@@ -170,9 +170,8 @@ public class Engine extends ApplicationAdapter {
                 break;
             }
         }
-        renderList.clear();
-        renderList = null;
         batch.end();
+        renderList.clear();
         logD("batch end time " + System.currentTimeMillis());
         try {
             Thread.sleep((long) (1000 / Bootstrap.FPS - Gdx.graphics.getDeltaTime()));

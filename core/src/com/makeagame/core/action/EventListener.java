@@ -1,30 +1,29 @@
-package com.makeagame.core.view;
+package com.makeagame.core.action;
 
 import java.util.ArrayList;
 
+import com.makeagame.core.view.SignalEvent;
 import com.makeagame.core.view.SignalEvent.Signal;
-import com.makeagame.tools.KeyTable;
-import com.makeagame.tools.SimpleLayout;
 import com.makeagame.tools.State;
 
-// 取代Button
+/**
+ * 自Button中抽離出來
+ * 負責監聽並處裡使用者操作指令
+ */
 public class EventListener {
 
     /**
      * 可能的狀態:
      * 定性狀態:
-     * Disable 時按鈕不能觸發, 且按鈕顯示灰色
-     * Activate
-     * InActivate 時按鈕不能觸發, 而且顯示為準備中
-     * InVisible 時按鈕能觸發, 但不顯示
-     * Gone 時按鈕不顯示, 也不能觸發
+     * Disable 時按鈕不能觸發
+     * Enable 時按鈕可觸發
+     * Active 觸發中
+     * InActive 時按鈕不能觸發, 而且顯示為準備中
+     * 
+     * Static 代表無動作的靜止狀態
      * Hovered 代表滑鼠(指標)在感應區內時(行動平台上無效)
      * Pushed 代表被按著時
      */
-    public static final int Invisible = 0;
-    public static final int Visible = 1;
-    public static final int Gone = 2;
-    
     public static final int Disable = 0;
     public static final int Enable = 1;
     public static final int Active = 2;
@@ -34,29 +33,11 @@ public class EventListener {
     public static final int Hovered = 1;
     public static final int Pushed = 2;
     
-    
-    public State visible_state;
     public State enable_state;
     public State action_state;
 
     public EventListener()
     {
-        action_state = new State(new long[][] {
-                // Static Hovered Pushed
-                { State.BLOCK, State.ALLOW, State.ALLOW },
-                { State.ALLOW, State.BLOCK, State.ALLOW },  // mobile do not have Hovered
-                { State.BLOCK, State.ALLOW, State.BLOCK }
-        });
-        action_state.reset(Static);
-        
-        visible_state = new State(new long[][] {
-                // Invisible Visible Gone
-                { State.BLOCK, State.ALLOW, State.ALLOW },
-                { State.ALLOW, State.BLOCK, State.ALLOW },
-                { State.ALLOW, State.ALLOW, State.BLOCK}
-        });
-        visible_state.reset(Visible);
-        
         // 只能由Inactive->Active
         // Enable 是過渡狀態
         enable_state = new State(new long[][] {
@@ -67,6 +48,14 @@ public class EventListener {
                 { State.ALLOW, State.BLOCK, State.ALLOW, State.BLOCK }
         });
         enable_state.reset(Active);
+        
+        action_state = new State(new long[][] {
+                // Static Hovered Pushed
+                { State.BLOCK, State.ALLOW, State.ALLOW },
+                { State.ALLOW, State.BLOCK, State.ALLOW },  // mobile do not have Hovered
+                { State.BLOCK, State.ALLOW, State.BLOCK }
+        });
+        action_state.reset(Static);
     }
 
     int x, y, w, h;
@@ -83,23 +72,6 @@ public class EventListener {
             enable_state.enter(Enable);
         } else {
             enable_state.enter(Disable);
-        }
-    }
-
-    public void setVisible(int visibleState) {
-       switch(visibleState){
-       case Visible:
-            visible_state.enter(Visible);
-            enable_state.enter(Enable);
-            break;
-       case Invisible:
-            visible_state.enter(Invisible);
-            enable_state.enter(Enable);
-            break;
-       case Gone:
-           visible_state.enter(Gone); 
-           enable_state.enter(Disable);
-           break;
         }
     }
 

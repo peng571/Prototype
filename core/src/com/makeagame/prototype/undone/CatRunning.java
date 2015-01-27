@@ -85,29 +85,28 @@ public class CatRunning {
         }
 
         @Override
-        public ArrayList<RenderEvent> render(String build) {
-            ArrayList<RenderEvent> list = new ArrayList<RenderEvent>();
-                Hold hold = new Gson().fromJson(build, Hold.class);
+        public ArrayList<RenderEvent> render(ArrayList<RenderEvent> list, String build) {
+            Hold hold = new Gson().fromJson(build, Hold.class);
 
-                // TODO:
+            // TODO:
 //                list.add(new RenderEvent(ResourceManager.get().fetch("cat")).XY(hold.cat.x, hold.cat.y));
 //                for (Poistion human : hold.humans) {
 //                    list.add(new RenderEvent(ResourceManager.get().fetch("human")).XY(human.x, human.y));
 //                }
-                
-                String text = "";
-                if (hold.reseting) {
-                    if (hold.countDown == -1) {
-                        text = "";
-                    } else if (hold.countDown == 0) {
-                        text = "start!!!";
-                    } else {
-                        text = String.valueOf(hold.countDown);
-                    }
-                } else if (!hold.running) {
-                    text = "press Enter to start.";
+            
+            String text = "";
+            if (hold.reseting) {
+                if (hold.countDown == -1) {
+                    text = "";
+                } else if (hold.countDown == 0) {
+                    text = "start!!!";
+                } else {
+                    text = String.valueOf(hold.countDown);
                 }
-                list.add(new RenderEvent(text).XY(200, 200));
+            } else if (!hold.running) {
+                text = "press Enter to start.";
+            }
+            list.add(new RenderEvent(text).XY(200, 200));
             return list;
         }
 

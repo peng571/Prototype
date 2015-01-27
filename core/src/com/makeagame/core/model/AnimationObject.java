@@ -3,6 +3,7 @@ package com.makeagame.core.model;
 import java.util.ArrayList;
 
 import com.google.gson.Gson;
+import com.makeagame.core.action.Action;
 
 public class AnimationObject extends MovableObject {
 
