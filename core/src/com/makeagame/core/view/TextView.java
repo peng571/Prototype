@@ -16,6 +16,9 @@ public class TextView extends SimpleLayout {
     boolean bold;
     int color;
     
+    // TODO 字體
+    //
+    
     public TextView(String s){
         super();
         this.word = s;
@@ -42,9 +45,9 @@ public class TextView extends SimpleLayout {
     }
     
     @Override
-    public ArrayList<RenderEvent> renderSelf(ArrayList<RenderEvent> list, int x, int y) {
+    public ArrayList<RenderEvent> renderSelf(ArrayList<RenderEvent> list) {
         beforeRender();
-        list.add(new RenderEvent(word).size(size).color(color));
+        list.add(new RenderEvent(word).size(size).color(color).XY(realX, realY));
         return list;
     }
     

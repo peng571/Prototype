@@ -2,7 +2,6 @@ package com.makeagame.tools;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import com.makeagame.core.action.EventListener;
 import com.makeagame.core.view.RenderEvent;
@@ -17,6 +16,10 @@ public class SimpleLayout {
     // 定值
     public int fixedX;
     public int fixedY;
+    
+    // 相對位置
+    public int relativeX;
+    public int relativeY;
     
     // 位移值(給動畫用)
     public int animX;
@@ -45,8 +48,6 @@ public class SimpleLayout {
     }
     
     public SimpleLayout copyFrom(SimpleLayout other) {
-        // TODO: 之後要刪掉realX
-        
         this.fixedX = other.fixedX;
         this.fixedY = other.fixedY;
         this.animX = other.animX;
@@ -88,6 +89,11 @@ public class SimpleLayout {
             children = new ArrayList<SimpleLayout>();
         }
         children.add(layout);
+        
+        
+        // 只在新增Child時重新計算
+        reslove(0, 0);
+        
         return this;
 
     }
@@ -151,6 +157,19 @@ public class SimpleLayout {
         }    
     }
     
+    
+    /**
+     *  NOTE:
+     *  建議把整體架構改成，
+     *  在Create View的時候就同時決定位置，
+     *  所有的定位都使用XY() 來決定相對中的絕對位置，
+     *  只有部分的View會根據apply所給定的動畫為移值來改變位置(但無法引響其子物件)
+     *  
+     *  這樣是否足以應付遊戲介面的變動性?
+     *  
+     */
+    
+    
     public void beforeReslove() {
         
     }
@@ -159,28 +178,33 @@ public class SimpleLayout {
         
     }
     
-    public ArrayList<RenderEvent> renderSelf(ArrayList<RenderEvent> list, int x, int y) {
-        beforeRender();
-        return sprite.render(list, x, y);
-    }
     
     public void reslove(int offx, int offy) {
-        beforeReslove();
-        realX = fixedX + animX + offx;
-        realY = fixedY + animY + offy;
+        realX = fixedX + offx;
+        realY = fixedY + offy;
         if (children != null) {
             for (SimpleLayout c : children) {
-                c.reslove(realX, realY);
+                if(c instanceof Button){
+                    // TODO 需要修改SimpleLayout和特殊繼承元件的關聯
+                    ((Button) c).XY(realX, realY);
+                } else{
+                    c.reslove(realX, realY);
+                }
             }
         }
     }
     
     
+    public void resloveSelf(){
+        beforeReslove();
+        //realX += animX;
+        //realY += animY;
+    }
+    
     
     public ArrayList<RenderEvent> render(ArrayList<RenderEvent> list) {
-        reslove(0, 0);
-        
-        renderSelf(list, realX, realY);
+        resloveSelf();
+        renderSelf(list);
         
         if (children != null) {
             for (SimpleLayout c : children) {
@@ -189,8 +213,12 @@ public class SimpleLayout {
                }
             }
         }
-        
         return list;
+    }
+    
+    public ArrayList<RenderEvent> renderSelf(ArrayList<RenderEvent> list) {
+        beforeRender();
+        return sprite.render(list, realX + animX, realY + animY);
     }
     
 }

@@ -85,72 +85,72 @@ public class GameView implements View {
         
         public LayoutTab(Sprite s){
             super(s);
-//            pages = new PageView();
-//            
-//            // 建築頁面
-//            SimpleLayout buildingLayout = new SimpleLayout();
-//            {
-//                for(int i=0;i<bd.size;i++){
-//                    final int fi = i;
-//                    
-//                    int cow = 3;
-//                    int x = 10 + i%cow * 76;
-//                    int y = 10 + i/cow * 76;
-//                    
-//                    // new SimpleLayout(new Sprite(bd.datas.get(fi).name)
-//                    Button btn = new Button(new Sprite("button")).RectArea(x, y, 64, 64);
-//                    btn.onClickAction = new Action(){
-//                        
-//                        @Override 
-//                        public void execute(){
-//                            action = "build";
-//                            tempBuilding = bd.datas.get(fi).name;
-//                            System.out.println("building " + bd.datas.get(fi).name);
-//                        }
-//                    };
-//                    btn.addChild(new SimpleLayout(new Sprite(bd.datas.get(fi).name)).XY(x+ 16, y+16));
-//                    buildingLayout.addChild(btn);
-//                }
-//            }
-//            pages.addTab(new Button(new Sprite("btn_build")).RectArea(10, 10, 64, 64), buildingLayout);
-//            
-//            
-//            // 資源頁面
-//            SimpleLayout reourceLayout = new SimpleLayout();
-//            {
-//                reourceLayout.addChild(new SimpleLayout(new Sprite("tree")));
-//                reourceLayout.addChild(new TextView("0123"));
-//            }
-//            pages.addTab(new Button(new Sprite("btn_res")).RectArea(80, 10, 64, 64), reourceLayout);
-//            
-//            addChild(pages.XY(0, 30));
+            pages = new PageView();
             
-            
+            // 建築頁面
             SimpleLayout buildingLayout = new SimpleLayout();
-          {
-              for(int i=0;i<bd.size;i++){
-                  final int fi = i;
-                  
-                  int cow = 3;
-                  int x = 10 + i%cow * 76;
-                  int y = 10 + i/cow * 76;
-                  
-                  // new SimpleLayout(new Sprite(bd.datas.get(fi).name)
-                  Button btn = new Button(new Sprite("button")).RectArea(x, y, 64, 64);
-                  btn.onClickAction = new Action(){
-                      
-                      @Override 
-                      public void execute(){
-                          action = "build";
-                          tempBuilding = bd.datas.get(fi).name;
-                          System.out.println("building " + bd.datas.get(fi).name);
-                      }
-                  };
-                  btn.addChild(new SimpleLayout(new Sprite(bd.datas.get(fi).name)).XY(x+ 16, y+16));
-                  buildingLayout.addChild(btn);
-              }
-          }
-          addChild(buildingLayout);
+            {
+                for(int i=0;i<bd.size;i++){
+                    final int fi = i;
+                    
+                    int cow = 3;
+                    int x = 10 + i%cow * 76;
+                    int y = 10 + i/cow * 76;
+                    
+                    // new SimpleLayout(new Sprite(bd.datas.get(fi).name)
+                    Button btn = new Button(new Sprite("button")).RectArea(x, y, 64, 64);
+                    btn.onClickAction = new Action(){
+                        
+                        @Override 
+                        public void execute(){
+                            action = "build";
+                            tempBuilding = bd.datas.get(fi).name;
+                            System.out.println("building " + bd.datas.get(fi).name);
+                        }
+                    };
+                    btn.addChild(new SimpleLayout(new Sprite(bd.datas.get(fi).name)).XY(x+ 16, y+16));
+                    buildingLayout.addChild(btn);
+                }
+            }
+            pages.addTab(new Button(new Sprite("btn_build")).RectArea(10, 10, 64, 64), buildingLayout);
+            
+            
+            // 資源頁面
+            SimpleLayout reourceLayout = new SimpleLayout();
+            {
+                reourceLayout.addChild(new SimpleLayout(new Sprite("tree")));
+                reourceLayout.addChild(new TextView("0123"));
+            }
+            pages.addTab(new Button(new Sprite("btn_res")).RectArea(80, 10, 64, 64), reourceLayout);
+            
+            addChild(pages.XY(0, 30));
+            
+            
+//            SimpleLayout buildingLayout = new SimpleLayout();
+//          {
+//              for(int i=0;i<bd.size;i++){
+//                  final int fi = i;
+//                  
+//                  int cow = 3;
+//                  int x = 10 + i%cow * 76;
+//                  int y = 10 + i/cow * 76;
+//                  
+//                  // new SimpleLayout(new Sprite(bd.datas.get(fi).name)
+//                  Button btn = new Button(new Sprite("button")).RectArea(x, y, 64, 64);
+//                  btn.onClickAction = new Action(){
+//                      
+//                      @Override 
+//                      public void execute(){
+//                          action = "build";
+//                          tempBuilding = bd.datas.get(fi).name;
+//                          System.out.println("building " + bd.datas.get(fi).name);
+//                      }
+//                  };
+//                  btn.addChild(new SimpleLayout(new Sprite(bd.datas.get(fi).name)).XY(x+ 16, y+16));
+//                  buildingLayout.addChild(btn);
+//              }
+//          }
+//          addChild(buildingLayout);
             
         }
         
