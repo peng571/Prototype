@@ -8,19 +8,20 @@ import org.json.JSONObject;
 import com.google.gson.Gson;
 import com.makeagame.core.Bootstrap;
 import com.makeagame.core.Controler;
-import com.makeagame.core.action.Action;
-import com.makeagame.core.action.EventListener;
+import com.makeagame.core.model.Action;
+import com.makeagame.core.model.EventListener;
 import com.makeagame.core.resource.ResourceManager;
+import com.makeagame.core.view.BaseViewComponent;
+import com.makeagame.core.view.BaseViewLayout;
+import com.makeagame.core.view.Button;
+import com.makeagame.core.view.PageView;
 import com.makeagame.core.view.RenderEvent;
 import com.makeagame.core.view.SignalEvent;
 import com.makeagame.core.view.SignalEvent.MouseEvent;
 import com.makeagame.core.view.SignalEvent.Signal;
 import com.makeagame.core.view.TextView;
 import com.makeagame.core.view.View;
-import com.makeagame.tools.Button;
-import com.makeagame.tools.SimpleLayout;
 import com.makeagame.tools.Sprite;
-import com.makeagame.tools.PageView;
 
 public class GameView implements View {
 
@@ -28,7 +29,7 @@ public class GameView implements View {
     
     Camera camera;
     
-    SimpleLayout layoutMain;
+    BaseViewLayout layoutMain;
     LayoutTab layoutTab;
     LayoutMap layoutMap;
     
@@ -38,7 +39,7 @@ public class GameView implements View {
     public GameView(){
         camera = new Camera();
         
-        layoutMain = new SimpleLayout();
+        layoutMain = new BaseViewLayout();
         
         layoutMap = new LayoutMap().XY(240, 0);
         layoutMain.addChild(layoutMap);
@@ -78,7 +79,8 @@ public class GameView implements View {
         return list;
     }
     
-    class LayoutTab extends SimpleLayout {
+    
+    class LayoutTab extends BaseViewLayout {
         
         PageView pages;
         BuildingData bd = BuildingData.get();
@@ -88,7 +90,7 @@ public class GameView implements View {
             pages = new PageView();
             
             // 建築頁面
-            SimpleLayout buildingLayout = new SimpleLayout();
+            BaseViewLayout buildingLayout = new BaseViewLayout();
             {
                 for(int i=0;i<bd.size;i++){
                     final int fi = i;
@@ -97,8 +99,7 @@ public class GameView implements View {
                     int x = 10 + i%cow * 76;
                     int y = 10 + i/cow * 76;
                     
-                    // new SimpleLayout(new Sprite(bd.datas.get(fi).name)
-                    Button btn = new Button(new Sprite("button")).RectArea(x, y, 64, 64);
+                    Button btn = new Button(new Sprite("button"), new Sprite(bd.datas.get(fi).name)).XY(x, y, 64, 64);
                     btn.onClickAction = new Action(){
                         
                         @Override 
@@ -108,25 +109,24 @@ public class GameView implements View {
                             System.out.println("building " + bd.datas.get(fi).name);
                         }
                     };
-                    btn.addChild(new SimpleLayout(new Sprite(bd.datas.get(fi).name)).XY(x+ 16, y+16));
                     buildingLayout.addChild(btn);
                 }
             }
-            pages.addTab(new Button(new Sprite("btn_build")).RectArea(10, 10, 64, 64), buildingLayout);
+            pages.addTab(new Button(new Sprite("btn_build")).XY(10, 10, 64, 64), buildingLayout);
             
             
             // 資源頁面
-            SimpleLayout reourceLayout = new SimpleLayout();
+            BaseViewLayout reourceLayout = new BaseViewLayout();
             {
-                reourceLayout.addChild(new SimpleLayout(new Sprite("tree")));
+                reourceLayout.addChild(new BaseViewComponent(new Sprite("tree")));
                 reourceLayout.addChild(new TextView("0123"));
             }
-            pages.addTab(new Button(new Sprite("btn_res")).RectArea(80, 10, 64, 64), reourceLayout);
+            pages.addTab(new Button(new Sprite("btn_res")).XY(80, 10, 64, 64), reourceLayout);
             
             addChild(pages.XY(0, 30));
             
             
-//            SimpleLayout buildingLayout = new SimpleLayout();
+//            BaseViewLayout buildingLayout = new BaseViewLayout();
 //          {
 //              for(int i=0;i<bd.size;i++){
 //                  final int fi = i;
@@ -135,8 +135,7 @@ public class GameView implements View {
 //                  int x = 10 + i%cow * 76;
 //                  int y = 10 + i/cow * 76;
 //                  
-//                  // new SimpleLayout(new Sprite(bd.datas.get(fi).name)
-//                  Button btn = new Button(new Sprite("button")).RectArea(x, y, 64, 64);
+//                  Button btn = new Button(new Sprite("button"), new Sprite(bd.datas.get(fi).name)).XY(x, y, 64, 64);
 //                  btn.onClickAction = new Action(){
 //                      
 //                      @Override 
@@ -146,23 +145,19 @@ public class GameView implements View {
 //                          System.out.println("building " + bd.datas.get(fi).name);
 //                      }
 //                  };
-//                  btn.addChild(new SimpleLayout(new Sprite(bd.datas.get(fi).name)).XY(x+ 16, y+16));
+//                  
 //                  buildingLayout.addChild(btn);
 //              }
 //          }
 //          addChild(buildingLayout);
             
+          reslove(0, 0);
         }
         
-//        @Override
-//        public ArrayList<RenderEvent> render(ArrayList<RenderEvent> list) {
-//           list = super.render(list);
-//           return list;
-//        }
     }
     
     
-    class LayoutMap extends SimpleLayout {
+    class LayoutMap extends BaseViewLayout {
         
         int startX = 240;
         

@@ -3,10 +3,13 @@ package com.makeagame.core.view;
 import java.util.ArrayList;
 
 import com.makeagame.core.resource.ResourceManager;
-import com.makeagame.tools.SimpleLayout;
 import com.makeagame.tools.Sprite;
 
-public class NumberView extends SimpleLayout {
+/**
+ * 使用圖片顯示的數字圖
+ * 創建時須帶入0~9的連續數字圖檔
+ */
+public class NumberView extends BaseViewComponent {
     
     int number;
     String output;

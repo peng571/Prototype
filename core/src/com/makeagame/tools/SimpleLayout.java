@@ -3,7 +3,7 @@ package com.makeagame.tools;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.makeagame.core.action.EventListener;
+import com.makeagame.core.model.EventListener;
 import com.makeagame.core.view.RenderEvent;
 import com.makeagame.core.view.SignalEvent;
 import com.makeagame.tools.KeyTable.ApplyList;
@@ -90,7 +90,6 @@ public class SimpleLayout {
         }
         children.add(layout);
         
-        
         // 只在新增Child時重新計算
         reslove(0, 0);
         
@@ -109,16 +108,8 @@ public class SimpleLayout {
     public void signal(ArrayList<SignalEvent> s){
         if (children != null) {
             for(SimpleLayout c : children){
-                
-                if(c instanceof Button){
-                // Button有三種狀態(Gone, Invisible, Visible)，需要特別處裡
-                   if(((Button)c).visible_state.currentStat() != Button.Gone){
-                       c.signal(s);
-                   }
-                } else if (c.visible) {
                    c.signal(s);
                } 
-            }
         }
         
         // TODO (擴充)階層式觸發事件   e.x. public boolean execute(){}
@@ -138,9 +129,6 @@ public class SimpleLayout {
         }
         
         for(String name : applylist.map.keySet()){
-        //Iterator<String> it = applylist.map.keySet().iterator();
-        //while (it.hasNext()) {
-            //String name = it.next();
             Object value = applylist.map.get(name);
             if (name.contains(".")) {
                 String[] bArray = name.split("[.]", 2);
@@ -184,12 +172,7 @@ public class SimpleLayout {
         realY = fixedY + offy;
         if (children != null) {
             for (SimpleLayout c : children) {
-                if(c instanceof Button){
-                    // TODO 需要修改SimpleLayout和特殊繼承元件的關聯
-                    ((Button) c).XY(realX, realY);
-                } else{
-                    c.reslove(realX, realY);
-                }
+                c.reslove(realX, realY);
             }
         }
     }
@@ -215,7 +198,7 @@ public class SimpleLayout {
         }
         return list;
     }
-    
+     
     public ArrayList<RenderEvent> renderSelf(ArrayList<RenderEvent> list) {
         beforeRender();
         return sprite.render(list, realX + animX, realY + animY);

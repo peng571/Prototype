@@ -9,7 +9,7 @@ import org.json.JSONObject;
 import com.google.gson.Gson;
 import com.makeagame.core.Bootstrap;
 import com.makeagame.core.Engine;
-import com.makeagame.core.action.Action;
+import com.makeagame.core.model.Action;
 import com.makeagame.core.model.AnimationObject;
 import com.makeagame.core.model.Model;
 import com.makeagame.core.resource.ResourceManager;

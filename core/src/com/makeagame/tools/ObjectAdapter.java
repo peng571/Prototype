@@ -2,10 +2,12 @@ package com.makeagame.tools;
 
 import java.util.List;
 
+import com.makeagame.core.view.BaseViewLayout;
+
 public abstract class ObjectAdapter<T> {
 
     List<T> list;
-    SimpleLayout layout;
+    BaseViewLayout layout;
 
     public ObjectAdapter(List<T> list) {
         this();
@@ -20,7 +22,7 @@ public abstract class ObjectAdapter<T> {
         this.list = list;
     }
 
-    public abstract SimpleLayout createView();
+    public abstract BaseViewLayout createView();
 
     public abstract void fillItem(T item);
 
