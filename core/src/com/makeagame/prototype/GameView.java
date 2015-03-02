@@ -46,7 +46,6 @@ public class GameView implements View {
         
         layoutTab = new LayoutTab(new Sprite("tab"));
         layoutMain.addChild(layoutTab);
-        
     }
     
     @Override
@@ -122,6 +121,14 @@ public class GameView implements View {
                 reourceLayout.addChild(new TextView("0123"));
             }
             pages.addTab(new Button(new Sprite("btn_res")).XY(80, 10, 64, 64), reourceLayout);
+            
+            
+            // 開始
+            BaseViewLayout runLayout = new BaseViewLayout();
+            {
+            	runLayout.addChild(new TextView("running!!"));
+            }
+            pages.addTab(new Button(new Sprite("btn_res")).XY(150, 10, 64, 64), reourceLayout);
             
             addChild(pages.XY(0, 30));
             

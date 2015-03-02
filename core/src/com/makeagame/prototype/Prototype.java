@@ -6,9 +6,6 @@ import com.makeagame.core.model.Model;
 import com.makeagame.core.resource.ResourceManager;
 import com.makeagame.core.view.View;
 
-/**
- * COPY練習 - 工人物語
- */
 public class Prototype {
     private Engine engine;
 
@@ -50,6 +47,9 @@ public class Prototype {
                 resource.bindImage("button", "btn.png").src(64, 64);
                 resource.bindImage("btn1", "btn_build.png").src(64, 64);
                 
+                // Role
+                resource.bindImage("role", "role.png");
+                
             }
         });
     }
@@ -60,7 +60,13 @@ public class Prototype {
 
     class Wolker implements GameObject {
         String name;
-        // TODO
+        
+        // TODO find road
+        
+        
+        // TODO 屬性...
+        
+        // TODO xx
     }
 }
 
@@ -117,7 +123,7 @@ class Camera {
         row = (int)((Bootstrap.screamWidth() - 240f) / (32f/ratio)) +1;
         col = (int)(Bootstrap.screamHeight() / (32f/ratio)) +1;
         
-        System.out.println("reset camera row="+row + "col=" + col );
+        System.out.println("reset camera row="+ row + "col=" + col );
     }
 
     public void move() { 
