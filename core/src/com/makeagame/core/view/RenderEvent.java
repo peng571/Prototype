@@ -2,27 +2,35 @@ package com.makeagame.core.view;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.makeagame.core.resource.Resource;
 
 public class RenderEvent {
 
+    public Resource res;
+    
     public int type;
     public String s;
-    public float x;
-    public float y;
-    public int srcX;
-    public int srcY;
-    public int srcW;
-    public int srcH;
+    
+    public float x = 0;
+    public float y = 0;
+    
+    public int srcX = 0;
+    public int srcY = 0;
+    public int srcW = -1;
+    public int srcH = -1;
+    
     public int dstX;
     public int dstY;
     public int dstW;
     public int dstH;
+    
     public float ratioX;
     public float ratioY;
+    
     public float angle;
+    
     public int gravity;
+    
     public Color color;
     public int size;
     public boolean useBlend = false;
@@ -32,17 +40,11 @@ public class RenderEvent {
     
     public float vol;
     
-    public Texture texture;
+    public static final int UNKNOW = 0;// 未指定類別的資源
     public static final int IMAGE = 0x001;
     public static final int LABEL = 0x002;
     public static final int SOUND = 0x004;
     
-//    public static final int LEFT = 0x000;
-//    public static final int RIGHT = 0x010;
-//    public static final int CENTER = 0x001;
-//    public static final int TOP = 0x100;
-//    public static final int DOWN = 0x000;
-
     private RenderEvent() {
         angle = 0;
         XY(0, 0);
@@ -57,67 +59,30 @@ public class RenderEvent {
         this.s = s;
     }
     
-    public Resource res;
-    
     public RenderEvent(Resource res) {
         this();
         Res(res);
-        
-        /*
-        this.res = res;
-        if (res.type.equals(Resource.TYPE.IMAGE)) {
-            this.type = IMAGE;
-        } else if (res.type.equals(Resource.TYPE.SOUND)) {
-            this.type = SOUND;
-        }
-        
-        
-        if (res.type.equals(Resource.TYPE.IMAGE)) {
-            this.type = IMAGE;
-            this.s = res.path;
-            
-//            int[] WH = res.getWH();
-//            //Engine.logI("w: " + new Integer(WH[0]).toString());
-//            //Engine.logI("h: " + new Integer(WH[1]).toString());
-//            srcH = WH[0];
-//            dstH = srcH;
-//            srcW = WH[1];
-//            dstW = srcW;
-            
-        } else if (res.type.equals(Resource.TYPE.SOUND)) {
-            this.type = SOUND;
-            this.s = res.path;
-        }
-        */
     }
 
-    /*
-    public RenderEvent(Texture texture) {
-        this();
-        this.type = IMAGE;
-        this.texture = texture;
-        //srcH = texture.getRegionHeight();
-        srcH = texture.getHeight();
-        dstH = srcH;
-        //srcW = texture.getRegionWidth();
-        srcW = texture.getWidth();
-        dstW = srcW;
-    }
-    
-    public RenderEvent sound(String id, float vol) {
-        this.type = SOUND;
-        this.s = id;
-        this.vol = vol;
-        return this;
-    }*/
     
     public RenderEvent Res(Resource res) {
         this.res = res;
-        if (res.type.equals(Resource.TYPE.IMAGE)) {
-            this.type = IMAGE;
-        } else if (res.type.equals(Resource.TYPE.SOUND)) {
-            this.type = SOUND;
+        this.type = res.type;
+        
+        switch(type){
+        case IMAGE:
+            int[] WH = res.getWH();
+            srcH = WH[0];
+            dstH = srcH;
+            srcW = WH[1];
+            dstW = srcW;
+            break;
+            
+        case SOUND:
+//            this.vol = res.vol;
+            
         }
+        
         return this;
     }
     
@@ -220,5 +185,5 @@ public class RenderEvent {
         this.size = size;
         return this;
     }
-
+    
 }

@@ -1,4 +1,4 @@
-package com.makeagame.core.view;
+package com.makeagame.core.view.component;
 
 import java.util.ArrayList;
 
@@ -30,7 +30,7 @@ public class PageView extends BaseViewLayout {
         btns.add(btn);
         addChild(btn);
         
-        layout.XY(0, btn.h + 30);  // TODO 可客製化 padding (可能在上下左右)
+        layout.withXY(0, btn.h + 30);  // TODO 可客製化 padding (可能在上下左右)
         // 預設顯示第一頁 
         if(currentPage == -1){
             currentPage = 0;

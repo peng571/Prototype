@@ -43,34 +43,6 @@ public class SimpleLayout {
         this.sprite = sprite;
     }
     
-    public SimpleLayout copy() {
-        return new SimpleLayout().copyFrom(this);
-    }
-    
-    public SimpleLayout copyFrom(SimpleLayout other) {
-        this.fixedX = other.fixedX;
-        this.fixedY = other.fixedY;
-        this.animX = other.animX;
-        this.animY = other.animY;
-        this.visible = other.visible;
-        this.sprite.copyFrom(other.sprite);
-        
-        if (this.children.size() == other.children.size()) {
-            for(int i=0; i < other.children.size(); i++) {
-                this.children.get(i).copyFrom(other.children.get(i));
-            }
-        } else {
-            this.cleanAllChildren();
-            for(int i=0; i < other.children.size(); i++) {
-                SimpleLayout n = new SimpleLayout();
-                n.copyFrom(other.children.get(i));
-                this.addChild(n);
-            }
-        }
-        return this;
-    }
-    
-    
     public SimpleLayout Sprite(Sprite sp)    {
         this.sprite = sp;
         return this;
@@ -103,6 +75,14 @@ public class SimpleLayout {
         }
         children = null;
     }
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     public void signal(ArrayList<SignalEvent> s){

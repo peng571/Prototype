@@ -61,7 +61,9 @@ public class Bar {
     }
     
     public void apply(Sprite sprite) {
-        sprite.apply(ktProgress.get(percent));
+        if(sprite != null){
+            sprite.apply(ktProgress.get(percent));
+        }
     }
     
 }

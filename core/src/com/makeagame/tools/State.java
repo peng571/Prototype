@@ -62,8 +62,8 @@ public class State {
     }
 
     public State copy() {
-        State New = new State(this.cond_table);
-        return New;
+        State newState = new State(this.cond_table);
+        return newState;
     }
 
     // 取得現在的狀態

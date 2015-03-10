@@ -1,9 +1,11 @@
-package com.makeagame.core.view;
+package com.makeagame.core.view.component;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.makeagame.core.model.EventListener;
+import com.makeagame.core.view.RenderEvent;
+import com.makeagame.core.view.SignalEvent;
 import com.makeagame.tools.KeyTable.ApplyList;
 import com.makeagame.tools.Sprite;
 
@@ -43,29 +45,19 @@ public class BaseViewComponent {
     public BaseViewComponent() {
     }
     
-    public BaseViewComponent(Sprite sprite) {
-        this();
-        this.sprite = sprite;
-    }
     
-    public BaseViewComponent(Sprite backgroundSprite, Sprite sprite){
-        this(sprite);
-        this.backgroundSprite = backgroundSprite;
-    }
-    
-    
-    public BaseViewComponent Sprite(Sprite sp)    {
+    public BaseViewComponent withSprite(Sprite sp){
         this.sprite = sp;
         return this;
     }
     
-    public BaseViewComponent background(Sprite bgSprite){
+    public BaseViewComponent withBackground(Sprite bgSprite){
         this.backgroundSprite = bgSprite;
         return this;
     }
     
     
-    public BaseViewComponent XY(int x, int y) {
+    public BaseViewComponent withXY(int x, int y) {
         this.fixedX = x;
         this.fixedY = y;
         return this;
@@ -141,4 +133,27 @@ public class BaseViewComponent {
         return list;
     }
 
+    
+    
+    
+    
+    
+//    // 有使用到這個的必要嗎?
+//    public BaseViewComponent copy() {
+//        return new BaseViewComponent().copyFrom(this);
+//    }
+//    
+//    public BaseViewComponent copyFrom(BaseViewComponent other) {
+//        this.fixedX = other.fixedX;
+//        this.fixedY = other.fixedY;
+//        this.animX = other.animX;
+//        this.animY = other.animY;
+//        this.visible = other.visible;
+//        if(this.sprite == null){
+//            this.sprite = new Sprite();
+//            this.sprite.copyFrom(other.sprite);
+//        }
+//        return this;
+//    }
+    
 }

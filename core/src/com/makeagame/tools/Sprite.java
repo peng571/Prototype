@@ -3,14 +3,34 @@ package com.makeagame.tools;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.makeagame.core.resource.ResourceManager;
+import org.json.JSONObject;
+
+import com.makeagame.core.resource.ResourceSystem;
 import com.makeagame.core.view.RenderEvent;
 import com.makeagame.tools.KeyTable.ApplyList;
 
-/**
- * 負責圖片 (和音效?) 的特效處理
- */
+
 public class Sprite {
+
+    public String imageId;
+    public String soundId;
+    
+    private RenderEvent render_event_img = null;
+    private RenderEvent render_event_snd = null;
+    
+    public Sprite setImage(String id){
+        this.imageId = id;
+        return this;
+    }
+    
+    public Sprite setSound(String id){
+        this.soundId = id;
+        return this;
+    }
+    
+    /*
+     * 圖片的相關參數
+     */
     // 位移
     public int x = 0;
     public int y = 0;
@@ -42,61 +62,30 @@ public class Sprite {
     public int srcFunc = -1;
     public int dstFunc = -1;
     
-    // 圖片
-    public String image;
-    // 音效
-    public String sound;
-    public String palyedSound;
-    public float soundVol = 1.0f;
-    
     // 該 image 的中心點
     public int centerX;
     public int centerY;
     
     
-    public void copyFrom(Sprite sprite) {
-        this.x = sprite.x;
-        this.y = sprite.y;
-
-        this.srcX = sprite.srcX;
-        this.srcY = sprite.srcY;
-        this.srcW = sprite.srcW;
-        this.srcH = sprite.srcH;
     
-        this.flipx = sprite.flipx;
-        this.flipy = sprite.flipy;
-
-        this.red = sprite.red;
-        this.green = sprite.green;
-        this.blue = sprite.blue;
-        this.alpha = sprite.alpha;
-        
-        this.srcFunc = sprite.srcFunc;
-        this.dstFunc = sprite.dstFunc;
-        
-        this.image = sprite.image;
-        
-        this.centerX = sprite.centerX;
-        this.centerY = sprite.centerY;
-    }
+    /*
+     * 音效的相關參數
+     */
+    // 音效
+    public String sound;
+    public String palyedSound;
+    public float soundVol = 1.0f;
+    public int playTimes; // play looping if playTimes is -1
+    public int startSec, endSec;
     
-    // 階層系統的子物件
-    //public ArrayList<Sprite> children;
-
-    public Sprite(String image) {
-        this.image = image;
-        this.sound = "";
-        this.palyedSound = "";
-    }
+    
 
     // 基準線
     public Sprite() {
-        this.image = "";
-        this.sound = "";
         this.palyedSound = "";
     }
     
-    public Sprite xy(int x, int y) {
+    public Sprite XY(int x, int y) {
         this.x = x;
         this.y = y;
         return this;
@@ -131,15 +120,13 @@ public class Sprite {
     }
 
     // TODO: 自動抓取中心點(從設定檔?)
-    public void reset_image(String image) {
-        this.image = image;
+    public void reset_image() {
         this.centerX = 0; // TODO
         this.centerY = 0; // TODO
     }
+    
 
     public void set(String key, Object value) {
-        if (key.equals("image")) { this.image = (String) value; }
-        if (key.equals("sound")) { this.sound = (String) value; }
         if (key.equals("x")) { this.x = ((Double) value).intValue();}
         if (key.equals("y")) { this.y = ((Double) value).intValue();}
         if (key.equals("srcX")) { this.srcX = ((Double) value).intValue();}
@@ -152,19 +139,33 @@ public class Sprite {
         if (key.equals("alpha")) { this.alpha = ((Double) value).floatValue();}
         if (key.equals("srcFunc")) { this.srcFunc = ((Integer) value).intValue();}
         if (key.equals("dstFunc")) { this.dstFunc = ((Integer) value).intValue();}
-
     }
+    
+    public void apply(JSONObject applyJson){
+        this.x = applyJson.optInt("x");
+        this.y = applyJson.optInt("y");
+        this.srcX = applyJson.optInt("srcX");
+        this.srcY = applyJson.optInt("srcY");
+        this.srcW = applyJson.optInt("srcW");
+        this.srcH = applyJson.optInt("srcH");
+        this.red = (float) applyJson.optDouble("red", 0);
+        this.green = (float)applyJson.optDouble("green", 0);
+        this.blue = (float)applyJson.optDouble("blue", 0);
+        this.alpha = (float)applyJson.optDouble("alpha", 0);
+        this.srcFunc = applyJson.optInt("srcFunc");
+        this.dstFunc = applyJson.optInt("dstFunc");
+    }
+    
     
     public void apply(ApplyList applylist) {
         HashMap<String, Object> map = applylist.map;
         if (map.containsKey("image")) {
             // TODO:
             //reset_image((String) map.get("image"));
-            this.image = (String) map.get("image");
         }
         
         if (map.containsKey("sound")) {
-            this.sound = (String) map.get("sound");
+            soundId = (String) map.get("sound");
         }
         if (map.containsKey("x")) {
             x = ((Double) map.get("x")).intValue();
@@ -208,18 +209,24 @@ public class Sprite {
         // TODO: .......
     }
     
-    private RenderEvent render_event_img = null;
-    private RenderEvent render_event_snd = null;
     
     
     public ArrayList<RenderEvent> render(ArrayList<RenderEvent> list, int offx, int offy) {
         RenderEvent img = null, snd =  null;
         
-        if (image != "") {
+        if (imageId != null) {
             if (this.render_event_img == null) {
-                this.render_event_img = new RenderEvent(ResourceManager.get().fetch(image));
+                try {
+                    this.render_event_img = new RenderEvent(ResourceSystem.get().fetch(imageId));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else {
-                this.render_event_img.Res(ResourceManager.get().fetch(image));
+                try {
+                    this.render_event_img.Res(ResourceSystem.get().fetch(imageId));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
             this.render_event_img
                 .XY(offx + x - centerX, offy + y - centerY)
@@ -229,27 +236,26 @@ public class Sprite {
                 .blend(srcFunc, dstFunc);
             img = this.render_event_img;
         }
-        if (sound != "" && sound != palyedSound) {
-            if (this.render_event_snd == null) {
-                this.render_event_snd = new RenderEvent(ResourceManager.get().fetch(sound));
-            } else {
-                this.render_event_snd.Res(ResourceManager.get().fetch(sound));
-            }
-            this.render_event_snd.vol = soundVol;
-            snd = this.render_event_snd;
-        }
-        palyedSound = sound;
+//        if (sound != null && sound != palyedSound) {
+//            if (this.render_event_snd == null) {
+////                    this.render_event_snd = new RenderEvent(ResourceSystem.get().fetch(sound));
+//            } else {
+////                    this.render_event_snd.Res(ResourceSystem.get().fetch(sound));
+//            }
+//            this.render_event_snd.vol = soundVol;
+//            snd = this.render_event_snd;
+//        }
+//        palyedSound = sound;
         
         
         if (img != null) {
              list.add(img);
         } 
         
-        if (snd != null) {
-             list.add(snd);
-        }
+//        if (snd != null) {
+//             list.add(snd);
+//        }
         
         return list;
     }
-
 }

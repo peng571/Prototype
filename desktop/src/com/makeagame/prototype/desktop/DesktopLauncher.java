@@ -11,6 +11,6 @@ public class DesktopLauncher {
         config.width = Bootstrap.screamWidth();
         config.height = Bootstrap.screamHeight();
         config.title = "Game";
-        new LwjglApplication(new Prototype().getEngine(), config);
+        new LwjglApplication(new Prototype().getApplication(), config);
     }
 }

@@ -10,4 +10,5 @@ public interface Model {
 
     // 完整交出內部
     String hold();
+
 }

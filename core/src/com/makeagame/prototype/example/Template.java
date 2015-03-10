@@ -7,9 +7,13 @@ import org.json.JSONObject;
 
 import com.google.gson.Gson;
 import com.makeagame.core.Bootstrap;
+import com.makeagame.core.Driver;
 import com.makeagame.core.Engine;
 import com.makeagame.core.model.Model;
-import com.makeagame.core.resource.ResourceManager;
+import com.makeagame.core.plugin.libgdx.LibgdxDriver;
+import com.makeagame.core.plugin.libgdx.LibgdxProcessor;
+import com.makeagame.core.resource.ResourceSystem;
+import com.makeagame.core.resource.process.RegisterFinder;
 import com.makeagame.core.view.RenderEvent;
 import com.makeagame.core.view.SignalEvent;
 import com.makeagame.core.view.SignalEvent.KeyEvent;
@@ -17,38 +21,48 @@ import com.makeagame.core.view.View;
 
 /**
  * Empty Game Template
+ * Using Libgdx Pluggin
  * 
  * @author Peng
  * 
  */
 public class Template {
 
-    private Engine engine;
-
-    public Engine getEngine() {
-        return engine;
-    }
-
+    private LibgdxDriver driver;
+    
     public Template() {
 
-        engine = new Engine(new Bootstrap() {
-
+        driver = new LibgdxDriver();
+        Engine engine = new Engine(new Bootstrap() {
+            
             @Override
-            public View setMainView() {
-                return new GameView();
+            public View getMainView() {
+                return  new GameView();
             }
 
             @Override
-            public Model setMainModel() {
+            public Model getMainModel() {
                 return new GameModel();
             }
-
+            
             @Override
-            public void resourceFactory(ResourceManager resource) {
-                // TODO:
-                // resource.bind("xx", new Resource().image("image/xx.png"));
+            public Driver getDriver() {
+                return driver;
             }
         });
+        driver.setEngine(engine);
+        
+        ResourceSystem rs = ResourceSystem.get();
+
+        RegisterFinder finder = new RegisterFinder();
+        try {
+            finder.register("xx", new JSONObject().put("path", "image/xx.png"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        
+        LibgdxProcessor processor = new LibgdxProcessor(finder);
+        rs.addProcessor(processor);
     }
 
     class GameView implements View {
@@ -104,5 +118,11 @@ public class Template {
 
     class Hold {
     }
-
+  
+  
+  // 提供跨平台用的程序，目前主要還是透過 Libgdx來實現跨平台
+  public LibgdxDriver getApplication() {
+      return driver;
+  }
 }
+

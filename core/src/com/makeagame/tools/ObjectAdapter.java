@@ -2,7 +2,7 @@ package com.makeagame.tools;
 
 import java.util.List;
 
-import com.makeagame.core.view.BaseViewLayout;
+import com.makeagame.core.view.component.BaseViewLayout;
 
 public abstract class ObjectAdapter<T> {
 

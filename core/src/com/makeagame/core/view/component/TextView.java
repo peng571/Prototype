@@ -1,7 +1,8 @@
-package com.makeagame.core.view;
+package com.makeagame.core.view.component;
 
 import java.util.ArrayList;
 
+import com.makeagame.core.view.RenderEvent;
 import com.makeagame.tools.Sprite;
 
 /** 
@@ -51,7 +52,7 @@ public class TextView extends BaseViewComponent {
     @Deprecated
     @Override
     // 此類別的元件不允許設置圖片
-    public TextView Sprite(Sprite sp) {
+    public TextView withSprite(Sprite sp) {
         return this;
     }
 
